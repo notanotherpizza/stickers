@@ -13,4 +13,5 @@ Things to do
 * Add a way to "swap out" images, so that the annotations can be preserved when the image is updated
 * Improve the colours when creating annotations
 * Allow moving/removing/editing of points in annotations
+* Better branding (add a favicon, some OpenGraph images, etc.)s
 * ~~Render line breaks in the annotations~~ **done**
