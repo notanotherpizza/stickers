@@ -46,7 +46,7 @@ export default function Home() {
       // We may want to draw and fill a polygon or simply draw the points that
       // make it up with lines between them.
 
-      for (let annotation of annotations) {
+      for (const annotation of annotations) {
         ctx.lineWidth = calculatePointSize(ctx) / 6;
         ctx.lineCap = "square";
         ctx.beginPath();
@@ -71,7 +71,7 @@ export default function Home() {
         ctx.stroke();
       }
     };
-  }, [canvasRef.current]);
+  }, [annotations, src]);
 
   const openAnnotation = (annotation: AnnotatedImage["annotations"][0]) => {
     (async () => {
@@ -104,7 +104,7 @@ export default function Home() {
   const handleClick = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
     const ctx = canvasRef.current!.getContext("2d");
 
-    for (let annotation of annotations) {
+    for (const annotation of annotations) {
       const { polygon } = annotation;
 
       const point = getPointFromEvent(e);

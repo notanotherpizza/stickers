@@ -1,7 +1,6 @@
 "use client";
 import {
   Dialog,
-  DialogBackdrop,
   DialogPanel,
   DialogTitle,
 } from "@headlessui/react";

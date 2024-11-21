@@ -50,10 +50,10 @@ export const checkIntersect = (perimeter: Point[], point: Point): boolean => {
 
   let p0 = { x: 0, y: 0 };
   let p1 = { x: 0, y: 0 };
-  let p2 = { ...perimeter.at(-1)! };
-  let p3 = { ...point };
+  const p2 = { ...perimeter.at(-1)! };
+  const p3 = { ...point };
 
-  for (var i = 0; i < perimeter.length - 1; i++) {
+  for (let i = 0; i < perimeter.length - 1; i++) {
     p0 = { ...perimeter[i] };
     p1 = { ...perimeter[i + 1] };
 

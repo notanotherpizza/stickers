@@ -2,7 +2,6 @@ import {
   ArrowDownCircleIcon,
   ArrowUpCircleIcon,
   TrashIcon,
-  XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { AnnotatedImage } from "./utils";
 

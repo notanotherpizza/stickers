@@ -143,15 +143,9 @@ export default function PolygonMaker({ img }: { img: AnnotatedImage }) {
       setCtx(ctx);
       setBgImg(img);
     };
-  }, []);
+  }, [annotatedImage.src]);
 
-  const resetCanvas = () => {
-    if (!ctx || !bgImg) {
-      return;
-    }
-
-    ctx?.drawImage(bgImg, 0, 0, ctx.canvas.width, ctx.canvas.height);
-  };
+  // const resetCanvas = useCallback(() => {}, []);
 
   const addPoint = (ctx: CanvasRenderingContext2D, p: Point) => {
     const { x, y } = p;
@@ -164,92 +158,87 @@ export default function PolygonMaker({ img }: { img: AnnotatedImage }) {
     ctx.moveTo(x, y);
   };
 
-  const drawCurrentPoint = (ctx: CanvasRenderingContext2D) => {
-    if (!currentPoint) {
+  useEffect(() => {
+    if (!canvasRef.current || !ctx || !bgImg) {
       return;
     }
 
-    addPoint(ctx, currentPoint);
+    const drawPolygon = (
+      ctx: CanvasRenderingContext2D,
+      annotation: { polygon: Point[]; fillStyle: string },
+      fill: boolean
+    ) => {
+      // We may want to draw and fill a polygon or simply draw the points that
+      // make it up with lines between them.
 
-    const lastPoint = perimeter.at(-1);
-    if (!lastPoint) {
-      return;
-    }
+      ctx.lineWidth = calculatePointSize(ctx) / 6;
+      ctx.strokeStyle = "white";
+      ctx.lineCap = "square";
+      ctx.beginPath();
 
-    console.log(lastPoint);
+      const { polygon } = annotation;
 
-    ctx.lineWidth = calculatePointSize(ctx) / 6;
-    ctx.strokeStyle = "white";
-    ctx.lineCap = "square";
-    ctx.beginPath();
-
-    ctx.moveTo(currentPoint.x, currentPoint.y);
-    ctx.lineTo(lastPoint.x, lastPoint.y);
-
-    ctx.stroke();
-  };
-
-  const drawPolygon = (
-    ctx: CanvasRenderingContext2D,
-    annotation: { polygon: Point[]; fillStyle: string },
-    fill: boolean
-  ) => {
-    // We may want to draw and fill a polygon or simply draw the points that
-    // make it up with lines between them.
-
-    ctx.lineWidth = calculatePointSize(ctx) / 6;
-    ctx.strokeStyle = "white";
-    ctx.lineCap = "square";
-    ctx.beginPath();
-
-    const { polygon } = annotation;
-
-    for (let i = 0; i < polygon.length; i++) {
-      if (i == 0) {
-        ctx.moveTo(polygon[i].x, polygon[i].y);
-        if (!fill) {
-          addPoint(ctx, polygon[i]);
-        }
-      } else {
-        ctx.lineTo(polygon[i].x, polygon[i].y);
-        if (!fill) {
-          addPoint(ctx, polygon[i]);
+      for (let i = 0; i < polygon.length; i++) {
+        if (i == 0) {
+          ctx.moveTo(polygon[i].x, polygon[i].y);
+          if (!fill) {
+            addPoint(ctx, polygon[i]);
+          }
+        } else {
+          ctx.lineTo(polygon[i].x, polygon[i].y);
+          if (!fill) {
+            addPoint(ctx, polygon[i]);
+          }
         }
       }
-    }
 
-    if (fill) {
-      ctx.lineTo(polygon[0].x, polygon[0].y);
-      ctx.closePath();
-      ctx.fillStyle = annotation.fillStyle;
-      ctx.fill();
-      ctx.strokeStyle = "blue";
-    }
+      if (fill) {
+        ctx.lineTo(polygon[0].x, polygon[0].y);
+        ctx.closePath();
+        ctx.fillStyle = annotation.fillStyle;
+        ctx.fill();
+        ctx.strokeStyle = "blue";
+      }
 
-    ctx.stroke();
-  };
+      ctx.stroke();
+    };
 
-  useEffect(() => {
-    if (!canvasRef.current || !ctx) {
-      return;
-    }
-    // Reset the canvas every time we redraw the polygons or perimeters.
-    resetCanvas();
+    const drawCurrentPoint = (ctx: CanvasRenderingContext2D) => {
+      if (!currentPoint) {
+        return;
+      }
 
-    for (let annotation of annotatedImage.annotations) {
+      addPoint(ctx, currentPoint);
+
+      const lastPoint = perimeter.at(-1);
+      if (!lastPoint) {
+        return;
+      }
+
+      console.log(lastPoint);
+
+      ctx.lineWidth = calculatePointSize(ctx) / 6;
+      ctx.strokeStyle = "white";
+      ctx.lineCap = "square";
+      ctx.beginPath();
+
+      ctx.moveTo(currentPoint.x, currentPoint.y);
+      ctx.lineTo(lastPoint.x, lastPoint.y);
+
+      ctx.stroke();
+    };
+
+    // Reset the canvas on each render.
+    ctx?.drawImage(bgImg, 0, 0, ctx.canvas.width, ctx.canvas.height);
+
+    for (const annotation of annotatedImage.annotations) {
       drawPolygon(ctx, annotation, true);
     }
 
     drawPolygon(ctx, { polygon: perimeter, fillStyle: "" }, false);
 
     drawCurrentPoint(ctx);
-  }, [
-    currentPoint,
-    perimeter,
-    annotatedImage.annotations,
-    ctx,
-    canvasRef.current,
-  ]);
+  }, [currentPoint, perimeter, annotatedImage.annotations, ctx, bgImg]);
 
   const closePolygon = () => {
     if (perimeter.length <= 2) {
@@ -338,8 +327,8 @@ export default function PolygonMaker({ img }: { img: AnnotatedImage }) {
       {annotatedImage.annotations.length === 0 ? (
         <div className='flex flex-col items-center justify-center w-1/4 h-full space-y-2 text-center'>
           <p>
-            Gonna be honest, this is designed for desktop. If you're on mobile,
-            your mileage may vary.
+            Gonna be honest, this is designed for desktop. If you&apos;re on
+            mobile, your mileage may vary.
           </p>
           <p>
             Click to draw a point on your image. Right-click to undo the last
@@ -347,13 +336,13 @@ export default function PolygonMaker({ img }: { img: AnnotatedImage }) {
             shape.
           </p>
           <p>
-            Once you complete a shape, you'll see an annotation display here.
-            Each annotation gets filled with a random colour.
+            Once you complete a shape, you&apos;ll see an annotation display
+            here. Each annotation gets filled with a random colour.
           </p>
           <p>
             If you have multiple annotations, the up and down arrows can change
-            the "layering" order. If a user clicks on an overlapping annotation,
-            annotation earliest in the list will be read.
+            the &ldquo;layering&rdquo; order. If a user clicks on an overlapping
+            annotation, annotation earliest in the list will be read.
           </p>
         </div>
       ) : (
