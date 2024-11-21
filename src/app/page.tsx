@@ -1,13 +1,14 @@
 "use client";
-import { createElement, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-import annotatedImage from "./annotations.json";
 import {
   AnnotatedImage,
   calculatePointSize,
   Point,
 } from "@/components/PolygonMaker/utils";
 import InfoBox from "@/components/InfoBox";
+
+import annotatedImage from "./annotations.json";
 
 export default function Home() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
