@@ -1,101 +1,147 @@
-import Image from "next/image";
+"use client";
+import { createElement, useEffect, useRef, useState } from "react";
+
+import annotatedImage from "./annotations.json";
+import {
+  AnnotatedImage,
+  calculatePointSize,
+  Point,
+} from "@/components/PolygonMaker/utils";
+import InfoBox from "@/components/InfoBox";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [open, setOpen] = useState(true);
+  const [infoBox, setInfoBox] = useState<{
+    title: string;
+    description: string;
+  } | null>({
+    title: "Welcome to my sticker library!",
+    description:
+      "Hello! I have lots of stickers on my laptop. So, I built a small web app to share them with people. It isn't particularly fancy (or well written, for that matter), but it gets the job done. I hope you enjoy it!",
+  });
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const { src, annotations } = annotatedImage as AnnotatedImage;
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      return;
+    }
+
+    const ctx = canvas.getContext("2d");
+
+    if (!ctx) {
+      return;
+    }
+
+    const img = new Image();
+    img.src = src;
+    img.onload = () => {
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+      // We may want to draw and fill a polygon or simply draw the points that
+      // make it up with lines between them.
+
+      for (let annotation of annotations) {
+        ctx.lineWidth = calculatePointSize(ctx) / 6;
+        ctx.lineCap = "square";
+        ctx.beginPath();
+
+        const { polygon } = annotation;
+
+        for (let i = 0; i < polygon.length; i++) {
+          if (i == 0) {
+            ctx.moveTo(polygon[i].x, polygon[i].y);
+          } else {
+            ctx.lineTo(polygon[i].x, polygon[i].y);
+          }
+        }
+
+        ctx.lineTo(polygon[0].x, polygon[0].y);
+        ctx.closePath();
+        ctx.fillStyle = annotation.fillStyle;
+        console.log(annotation.fillStyle);
+        ctx.fill();
+        ctx.strokeStyle = "grey";
+
+        ctx.stroke();
+      }
+    };
+  }, [canvasRef.current]);
+
+  const openAnnotation = (annotation: AnnotatedImage["annotations"][0]) => {
+    (async () => {
+      if (open) {
+        setOpen(false);
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
+
+      setInfoBox({
+        title: annotation.title,
+        description: annotation.description,
+      });
+      setOpen(true);
+    })();
+  };
+
+  const getPointFromEvent = (e: React.MouseEvent): Point => {
+    if (!canvasRef.current) {
+      return { x: 0, y: 0 };
+    }
+
+    const rect = canvasRef.current.getBoundingClientRect();
+
+    return {
+      x: (e.clientX - rect.left) * (canvasRef.current.width / rect.width),
+      y: (e.clientY - rect.top) * (canvasRef.current.height / rect.height),
+    };
+  };
+
+  const handleClick = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
+    const ctx = canvasRef.current!.getContext("2d");
+
+    for (let annotation of annotations) {
+      const { polygon } = annotation;
+
+      const point = getPointFromEvent(e);
+
+      const path = new Path2D();
+
+      for (let i = 0; i < polygon.length; i++) {
+        if (i == 0) {
+          path.moveTo(polygon[i].x, polygon[i].y);
+        } else {
+          path.lineTo(polygon[i].x, polygon[i].y);
+        }
+      }
+
+      if (ctx!.isPointInPath(path, point.x, point.y)) {
+        openAnnotation(annotation);
+        break;
+      }
+    }
+  };
+
+  return (
+    <>
+      <div className='flex items-center justify-center p-4 space-x-4 h-dvh w-dvw'>
+        <div className=''>
+          <canvas
+            className='w-full h-full max-h-[95dvh] max-w-[90dwh]'
+            ref={canvasRef}
+            onClick={(e) => handleClick(e)}
+          />
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+      <InfoBox
+        open={open}
+        setOpen={setOpen}
+        title={infoBox?.title}
+        description={infoBox?.description}
+      />
+    </>
   );
 }
