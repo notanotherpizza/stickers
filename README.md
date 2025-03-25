@@ -56,7 +56,7 @@ Navigate to [http://localhost:3000/](http://localhost:3000) to see an example im
 
 ## Contributing
 
-First check out the main branch and get all upstream changes
+First fork the repo and clone it, then check out the main branch and get all upstream changes
 
 ```bash
 git checkout main
