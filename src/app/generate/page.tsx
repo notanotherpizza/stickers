@@ -3,6 +3,7 @@ import { PencilSquareIcon, PhotoIcon, ArrowPathIcon, XMarkIcon } from "@heroicon
 import { useState, useRef } from "react";
 import PolygonMaker from "@/components/PolygonMaker";
 import { AnnotatedImage } from "@/components/PolygonMaker/utils";
+import Image from 'next/image';
 
 export default function Home() {
   const [annotatedImage, setAnnotatedImage] = useState<AnnotatedImage | null>(
@@ -80,14 +81,14 @@ export default function Home() {
     reader.readAsDataURL(e.target.files?.[0] as Blob);
     reader.onload = (readerEvent) => {
       if (readerEvent.target?.result) {
-        const img = new Image();
+        const img = new window.Image() as HTMLImageElement;
         img.src = readerEvent.target.result as string;
         
         img.onload = () => {
           // Create a canvas to scale the new image to match the original dimensions
           if (!canvasRef.current) return;
           
-          const originalImg = new Image();
+          const originalImg = new window.Image() as HTMLImageElement;
           originalImg.src = annotatedImage.src;
           
           originalImg.onload = () => {
@@ -205,10 +206,13 @@ export default function Home() {
           </div>
           
           <div className='flex justify-center my-4'>
-            <img 
-              src={annotatedImage.src} 
-              alt="Current image" 
+            <Image 
+              src={annotatedImage.src}
+              alt="Current image"
+              width={500}
+              height={320}
               className='max-h-80 border border-gray-300 rounded-lg'
+              priority={true}
             />
           </div>
           
