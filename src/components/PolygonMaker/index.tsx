@@ -366,9 +366,13 @@ export default function PolygonMaker({
             />
           ))}
           <div className='w-full mt-5'>
+            {/* This button will be rendered first (above) */}
+            {renderAdditionalButton && renderAdditionalButton()}
+            
+            {/* Save annotations button will be rendered second (below) */}
             <button
               type='button'
-              className='w-full px-3 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'
+              className='w-full px-3 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 mt-2'
               onClick={() => {
                 const title = prompt(
                   "Enter a title for this annotation. For example: 'my work MacBook'."
@@ -379,8 +383,6 @@ export default function PolygonMaker({
               }}>
               Save annotations
             </button>
-            
-            {renderAdditionalButton && renderAdditionalButton()}
           </div>
         </div>
       )}

@@ -265,14 +265,14 @@ export default function Home() {
             <button
               onClick={startReplaceImageMode}
               type='button'
-              className='px-4 py-2 text-sm font-medium text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mt-2'>
-              <span className='flex items-center'>
+              className='w-full px-3 py-2 text-sm font-semibold text-white bg-indigo-600 rounded-md shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600'>
+              <span className='flex items-center justify-center'>
                 <ArrowPathIcon className='w-4 h-4 mr-1' />
                 Replace Image
               </span>
             </button>
           )}
-          />
+        />
       </div>
     );
   }
