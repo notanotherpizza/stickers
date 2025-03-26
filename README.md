@@ -37,9 +37,11 @@ npm run build
 npm run start
 ```
 
-Navigate to [http://localhost:3000/](http://localhost:3000) to see an example image annotation or to [http://localhost:3000/generate](http://localhost:3000/generate) to create your own.
+Navigate to [http://localhost:3000/](http://localhost:3000) to see an example image annotation or to [http://localhost:3000/generate](http://localhost:3000/generate) to create your own. 
 
 ![annotating a new image with the app](./new-annotation.gif)
+
+Once you're happy with your sticker annotations you can save them and then replace the `src/app/annotations.json` file with your newly exported annotations to swap out my laptop stickers on the homepage with yours.
 
 
 ## Things to do
