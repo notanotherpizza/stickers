@@ -256,23 +256,23 @@ export default function Home() {
       </div>
     );
   } else {
-    // Normal polygon maker view with additional option to replace image
+    // Normal polygon maker view with Replace Image button relocated
     return (
-      <div className="relative">
-        <PolygonMaker img={annotatedImage} />
-        
-        {/* Replace Image button in bottom right corner */}
-        <div className='absolute bottom-6 right-6'>
-          <button
-            onClick={startReplaceImageMode}
-            type='button'
-            className='px-4 py-2 text-sm font-medium text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'>
-            <span className='flex items-center'>
-              <ArrowPathIcon className='w-4 h-4 mr-1' />
-              Replace Image
-            </span>
-          </button>
-        </div>
+      <div>
+        <PolygonMaker 
+          img={annotatedImage} 
+          renderAdditionalButton={() => (
+            <button
+              onClick={startReplaceImageMode}
+              type='button'
+              className='px-4 py-2 text-sm font-medium text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 mt-2'>
+              <span className='flex items-center'>
+                <ArrowPathIcon className='w-4 h-4 mr-1' />
+                Replace Image
+              </span>
+            </button>
+          )}
+          />
       </div>
     );
   }

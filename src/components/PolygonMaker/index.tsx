@@ -25,7 +25,13 @@ const fillStyles = [
   "rgba(255, 0, 0, 0.5)",
 ];
 
-export default function PolygonMaker({ img }: { img: AnnotatedImage }) {
+export default function PolygonMaker({ 
+  img, 
+  renderAdditionalButton 
+}: { 
+  img: AnnotatedImage;
+  renderAdditionalButton?: () => React.ReactNode;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [perimeter, setPerimeter] = useState<Point[]>([]);
   const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null);
@@ -373,6 +379,8 @@ export default function PolygonMaker({ img }: { img: AnnotatedImage }) {
               }}>
               Save annotations
             </button>
+            
+            {renderAdditionalButton && renderAdditionalButton()}
           </div>
         </div>
       )}
