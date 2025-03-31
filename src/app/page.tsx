@@ -6,6 +6,7 @@ import {
   calculatePointSize,
   Point,
 } from "@/components/PolygonMaker/utils";
+import { validateAndMigrateAnnotatedImage } from "@/components/PolygonMaker/schema";
 import InfoBox from "@/components/InfoBox";
 
 import annotatedImage from "./annotations.json";
@@ -22,7 +23,8 @@ export default function Home() {
       "Hello! I have lots of stickers on my laptop. So, I built a small web app to share them with people. It isn't particularly fancy (or well written, for that matter), but it gets the job done. I hope you enjoy it!",
   });
 
-  const { src, annotations } = annotatedImage as AnnotatedImage;
+  const validatedImage = validateAndMigrateAnnotatedImage(annotatedImage);
+  const { src, annotations } = validatedImage;
 
   useEffect(() => {
     const canvas = canvasRef.current;

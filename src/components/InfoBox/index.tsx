@@ -18,8 +18,8 @@ export default function InfoBox({
   description?: string;
 }) {
   return (
-    <Dialog open={open} onClose={() => {}}>
-      <div className='absolute bottom-0 right-0'>
+    <Dialog open={open} onClose={() => {}} className="relative z-50">
+      <div className='absolute bottom-0 right-0 z-50'>
         <div className='flex items-end justify-center min-h-full text-center sm:items-center sm:p-0'>
           <DialogPanel
             transition
