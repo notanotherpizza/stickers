@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import PolygonMaker from "@/components/PolygonMaker";
 import { AnnotatedImage } from "@/components/PolygonMaker/utils";
 import Image from 'next/image';
+import { validateAndMigrateAnnotatedImage } from "@/components/PolygonMaker/schema";
 
 export default function Home() {
   const [annotatedImage, setAnnotatedImage] = useState<AnnotatedImage | null>(
@@ -46,25 +47,24 @@ export default function Home() {
       return;
     }
 
-    reader.readAsText(e.target.files?.[0] as Blob);
+    reader.readAsText(e.target.files[0] as Blob);
     reader.onload = (readerEvent) => {
       if (readerEvent.target?.result) {
         try {
-          setAnnotatedImage(JSON.parse(readerEvent.target.result as string));
+          const data = JSON.parse(readerEvent.target.result as string);
+          const validatedData = validateAndMigrateAnnotatedImage(data);
+          setAnnotatedImage(validatedData);
         } catch (error) {
           console.error(error);
-          alert("An error occurred while reading the file.");
+          alert("An error occurred while reading the file. Please make sure it's a valid sticker annotation file.");
           return;
         }
       }
-
-      return;
     };
 
     reader.onerror = (error) => {
       console.error(error);
       alert("An error occurred while reading the file.");
-      return;
     };
   };
 
