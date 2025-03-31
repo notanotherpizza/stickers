@@ -20,7 +20,15 @@ export default function Home() {
       return;
     }
 
-    reader.readAsDataURL(e.target.files?.[0] as Blob);
+    const file = e.target.files[0];
+    const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+    
+    if (!validTypes.includes(file.type)) {
+      alert("Please select a PNG or JPG/JPEG image file.");
+      return;
+    }
+
+    reader.readAsDataURL(file);
     reader.onload = (readerEvent) => {
       if (readerEvent.target?.result) {
         setAnnotatedImage({
@@ -29,14 +37,11 @@ export default function Home() {
           annotations: [],
         });
       }
-
-      return;
     };
 
     reader.onerror = (error) => {
       console.error(error);
       alert("An error occurred while reading the file.");
-      return;
     };
   };
 
@@ -147,7 +152,7 @@ export default function Home() {
           <input
             id='newImage'
             type='file'
-            accept='image/*'
+            accept='.png,.jpg,.jpeg'
             onChange={(e) => handleNewImage(e)}
             className='hidden'
           />
