@@ -41,6 +41,8 @@ Navigate to [http://localhost:3000/](http://localhost:3000) to see an example im
 
 ![annotating a new image with the app](./new-annotation.gif)
 
+You can use Markdown in labels!
+
 Once you're happy with your sticker annotations you can save them and then replace the `src/app/annotations.json` file with your newly exported annotations to swap out my laptop stickers on the homepage with yours.
 
 
@@ -50,7 +52,7 @@ Once you're happy with your sticker annotations you can save them and then repla
 * Compress the images on upload
 * Possibly encode in Base85 to reduce the size of the images
 * Accept HEICs and convert them to JPEGs
-* Add a way to "swap out" images, so that the annotations can be preserved when the image is updated
+* Add a way to "swap out" images, so that the annotations can be preserved when the image is updated **done**
 * Improve the colours when creating annotations
 * Allow moving/removing/editing of points in annotations
 * Better branding (add a favicon, some OpenGraph images, etc.)s
