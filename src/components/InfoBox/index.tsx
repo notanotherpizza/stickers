@@ -70,7 +70,7 @@ export default function InfoBox({
                   <div className="mt-2 prose prose-sm max-w-none space-y-2">
                     <ReactMarkdown
                       components={{
-                        a: ({ ...props }) => (
+                        a: (props) => (
                           <a
                             {...props}
                             target="_blank"
@@ -79,16 +79,16 @@ export default function InfoBox({
                             onClick={(e) => e.stopPropagation()}
                           />
                         ),
-                        p: ({ ...props }) => (
+                        p: (props) => (
                           <p {...props} className="text-gray-500 text-md" />
                         ),
-                        ul: ({ ...props }) => (
+                        ul: (props) => (
                           <ul {...props} className="list-disc pl-5 text-gray-500 text-md" />
                         ),
-                        ol: ({ ...props }) => (
+                        ol: (props) => (
                           <ol {...props} className="list-decimal pl-5 text-gray-500 text-md" />
                         ),
-                        li: ({ ...props }) => (
+                        li: (props) => (
                           <li {...props} className="text-gray-500 text-md" />
                         ),
                         code: (props: CodeProps) => (
@@ -98,7 +98,7 @@ export default function InfoBox({
                             <code {...props} className="block bg-gray-100 rounded p-2 text-sm overflow-x-auto" />
                           )
                         ),
-                        pre: ({ ...props }) => (
+                        pre: (props) => (
                           <pre {...props} className="bg-gray-100 rounded p-2 text-sm overflow-x-auto" />
                         ),
                       }}
