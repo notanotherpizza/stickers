@@ -52,8 +52,8 @@ export default function InfoBox({
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <DialogPanel className="relative w-full max-w-xl transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all">
-                <div className="absolute right-0 top-0 pr-4 pt-4">
+              <DialogPanel className="relative w-full max-w-xl transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:max-h-[90vh] max-h-[80vh] overflow-y-auto">
+                <div className="absolute right-0 top-0 pr-4 pt-4 block">
                   <button
                     type="button"
                     onClick={() => setOpen(false)}
