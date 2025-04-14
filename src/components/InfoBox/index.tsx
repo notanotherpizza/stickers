@@ -94,8 +94,8 @@ export default function InfoBox({
                         li: ({ ...props }) => (
                           <li {...props} className="text-gray-500 text-md" />
                         ),
-                        code: ({ inline, ...props }: CodeProps) => (
-                          inline ? (
+                        code: (props: CodeProps) => (
+                          props.inline ? (
                             <code {...props} className="bg-gray-100 rounded px-1 py-0.5 text-sm" />
                           ) : (
                             <code {...props} className="block bg-gray-100 rounded p-2 text-sm overflow-x-auto" />
