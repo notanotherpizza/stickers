@@ -6,14 +6,11 @@ import {
   Transition,
 } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Fragment } from "react";
+import { Fragment, BaseHTMLAttributes } from "react";
 import ReactMarkdown from 'react-markdown';
 
-interface CodeProps {
-  inline?: boolean;
-  className?: string;
-  children?: React.ReactNode;
-}
+// Using BaseHTMLAttributes to correctly extend HTML element properties
+type CodeProps = BaseHTMLAttributes<HTMLElement> & { inline?: boolean; }
 
 export default function InfoBox({
   open,
