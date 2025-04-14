@@ -70,7 +70,7 @@ export default function InfoBox({
                   >
                     {title}
                   </DialogTitle>
-                  <div className="mt-2 prose prose-sm max-w-none">
+                  <div className="mt-2 prose prose-sm max-w-none space-y-2">
                     <ReactMarkdown
                       components={{
                         a: ({ ...props }) => (
