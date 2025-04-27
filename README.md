@@ -1,6 +1,6 @@
 # stickers
 
-![annotated stickers on my laptop](./leos-stickers.gif)
+![annotated stickers on my laptop](./images/leos-stickers.gif)
 
 An annotated guide to my laptop stickers.
 
@@ -39,7 +39,43 @@ npm run start
 
 Navigate to [http://localhost:3000/](http://localhost:3000) to see an example image annotation or to [http://localhost:3000/generate](http://localhost:3000/generate) to create your own. 
 
-![annotating a new image with the app](./new-annotation.gif)
+![annotating a new image with the app](./images/new-annotation.gif)
+
+You can use (most, headings are not yet supported: see below) Markdown in labels:
+
+![markdown in annotations example](./images/markdown_example.png)
+
+```markdown
+
+# Headings
+
+## Headings
+
+### Headings
+
+**bold text**
+
+*italicized text*
+
+> blockquote
+
+1. First item
+2. Second item
+3. Third item
+
+- First item
+- Second item
+- Third item
+
+`code`
+
+---
+
+[title](https://www.example.com)
+
+![example sticker library image](https://github.com/notanotherpizza/stickers/raw/main/leos-stickers.gif)
+
+```
 
 Once you're happy with your sticker annotations you can save them and then replace the `src/app/annotations.json` file with your newly exported annotations to swap out my laptop stickers on the homepage with yours.
 
@@ -50,7 +86,7 @@ Once you're happy with your sticker annotations you can save them and then repla
 * Compress the images on upload
 * Possibly encode in Base85 to reduce the size of the images
 * Accept HEICs and convert them to JPEGs
-* Add a way to "swap out" images, so that the annotations can be preserved when the image is updated
+* Add a way to "swap out" images, so that the annotations can be preserved when the image is updated **done**
 * Improve the colours when creating annotations
 * Allow moving/removing/editing of points in annotations
 * Better branding (add a favicon, some OpenGraph images, etc.)s
